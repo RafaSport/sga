@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Abrigo {
+  id          String   @id @default(uuid())
+  nome        String
+  perfil      String
+  endereco    String
+  telefone    String
+  capacidade  Int
+  status      String
+
+  funcionarios Funcionario[]
+  acolhidos    Acolhido[]
+}
+
+model Funcionario {
+  id         String  @id @default(uuid())
+  nome       String
+  matricula  String
+  cargo      String
+  perfil     String
+  email      String  @unique
+  senha      String
+  contato    String
+  empresa    String
+  status     String
+
+  abrigoId   String
+  abrigo     Abrigo  @relation(fields: [abrigoId], references: [id])
+}
+
+model Acolhido {
+  id              String   @id @default(uuid())
+  nome            String
+  dataNascimento  DateTime
+  genero          String
+  naturalidade    String
+  filiacao        String
+  contatos        String
+  status          String
+
+  abrigoId        String
+  abrigo          Abrigo  @relation(fields: [abrigoId], references: [id])
+}
