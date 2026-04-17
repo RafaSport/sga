@@ -1,75 +1,83 @@
-import NextAuth from "next-auth"
-import type { AuthOptions } from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import { prisma } from "./prisma"
-import bcrypt from "bcrypt"
+import bcrypt from 'bcrypt';
+import type { AuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { prisma } from './prisma';
 
 export const authOptions: AuthOptions = {
-  providers: [
-    CredentialsProvider({
-      name: "Credenciais",
+    providers: [
+        CredentialsProvider({
+            name: 'Credenciais',
 
-      credentials: {
-        email: {},
-        senha: {}
-      },
+            credentials: {
+                email: {},
+                senha: {},
+            },
 
-      async authorize(credentials: any) {
-        if (!credentials?.email || !credentials?.senha) {
-          throw new Error("Dados inválidos")
-        }
+            async authorize(credentials: any) {
+                // validação básica
+                if (!credentials?.email || !credentials?.senha) {
+                    return null;
+                }
 
-        const usuario = await prisma.funcionario.findUnique({
-          where: { email: credentials.email }
-        })
+                const usuario = await prisma.funcionario.findUnique({
+                    where: { email: credentials.email },
+                });
 
-        if (!usuario) {
-          throw new Error("Usuário não encontrado")
-        }
+                // usuário não encontrado
+                if (!usuario) {
+                    return null;
+                }
 
-        const senhaValida = await bcrypt.compare(
-          credentials.senha,
-          usuario.senha
-        )
+                // segurança extra
+                if (!usuario.senha) {
+                    return null;
+                }
 
-        if (!senhaValida) {
-          throw new Error("Senha inválida")
-        }
+                // compara senha com hash
+                const senhaValida = await bcrypt.compare(
+                    credentials.senha,
+                    usuario.senha
+                );
 
-        return {
-          id: usuario.id,
-          nome: usuario.nome,
-          email: usuario.email,
-          perfil: usuario.perfil,
-          abrigoId: usuario.abrigoId
-        }
-      }
-    })
-  ],
+                if (!senhaValida) {
+                    return null;
+                }
 
-  session: {
-    strategy: "jwt"
-  },
+                // retorno vai para o token/session
+                return {
+                    id: usuario.id,
+                    nome: usuario.nome,
+                    email: usuario.email,
+                    perfil: usuario.perfil,
+                    abrigoId: usuario.abrigoId,
+                };
+            },
+        }),
+    ],
 
-  callbacks: {
-    async jwt({ token, user }: any) {
-      if (user) {
-        token.id = user.id
-        token.perfil = user.perfil
-        token.abrigoId = user.abrigoId
-      }
-      return token
+    session: {
+        strategy: 'jwt',
     },
 
-    async session({ session, token }: any) {
-      session.user.id = token.id
-      session.user.perfil = token.perfil
-      session.user.abrigoId = token.abrigoId
-      return session
-    }
-  },
+    callbacks: {
+        async jwt({ token, user }: any) {
+            if (user) {
+                token.id = user.id;
+                token.perfil = user.perfil;
+                token.abrigoId = user.abrigoId;
+            }
+            return token;
+        },
 
-  pages: {
-    signIn: "/login"
-  }
-}
+        async session({ session, token }: any) {
+            session.user.id = token.id;
+            session.user.perfil = token.perfil;
+            session.user.abrigoId = token.abrigoId;
+            return session;
+        },
+    },
+
+    pages: {
+        signIn: '/login',
+    },
+};
