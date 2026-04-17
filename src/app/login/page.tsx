@@ -1,83 +1,73 @@
-"use client"
+'use client';
 
-import { signIn } from "next-auth/react"
-import { useState } from "react"
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [senha, setSenha] = useState("")
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const [loading, setLoading] = useState(false);
 
-  async function handleLogin(e: any) {
-    e.preventDefault()
+    async function handleLogin(e: any) {
+        e.preventDefault();
+        setLoading(true);
 
-    await signIn("credentials", {
-      email,
-      senha,
-      callbackUrl: "/"
-    })
-  }
+        await signIn('credentials', {
+            email,
+            senha,
+            callbackUrl: '/',
+        });
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-prefeitura-light">
-      
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
-        
-        {/* Logo */}
-        <div className="flex justify-center mb-4">
-          <img src="/logo.png" alt="Logo" className="w-20" />
+        setLoading(false);
+    }
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+                {/* Logo */}
+                <div className="flex justify-center mb-4">
+                    <img
+                        src="/images/logo_recife.jpg"
+                        alt="Prefeitura do Recife"
+                        className="h-16 object-contain"
+                    />
+                </div>
+
+                {/* Título */}
+                <h1 className="text-2xl font-bold text-center text-blue-900 mb-6">
+                    Sistema de Gestão de Abrigos
+                </h1>
+
+                {/* Formulário */}
+                <form onSubmit={handleLogin} className="flex flex-col gap-4">
+                    {/* Email */}
+                    <input
+                        type="email"
+                        placeholder="Digite seu email"
+                        className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+
+                    {/* Senha */}
+                    <input
+                        type="password"
+                        placeholder="Digite sua senha"
+                        className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                        value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
+                    />
+
+                    {/* Botão */}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+                    >
+                        {loading ? 'Entrando...' : 'Entrar'}
+                    </button>
+                </form>
+            </div>
         </div>
-
-        <h1 className="text-2xl font-bold text-center text-prefeitura-primary mb-6">
-          Sistema de Gestão de Abrigos
-        </h1>
-
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
-          
-          <input
-            type="email"
-            placeholder="Email"
-            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-prefeitura-secondary"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          <input
-            type="password"
-            placeholder="Senha"
-            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-prefeitura-secondary"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
-
-          <button
-            type="submit"
-            className="bg-prefeitura-primary text-white py-2 rounded hover:bg-prefeitura-secondary transition"
-          >
-            Entrar
-          </button>
-        </form>
-      </div>
-    </div>
-  )
+    );
 }
-
-/*
-==========================
-PARA VOCÊ
-==========================
-
-Aqui começamos a aplicar UX real:
-
-- centralização da tela
-- card com sombra (visual moderno)
-- paleta consistente
-- foco nos inputs
-- botão com hover
-
-Isso já é padrão de sistema profissional.
-
-Depois podemos evoluir:
-- mensagens de erro
-- loading no botão
-- mostrar/ocultar senha
-*/
