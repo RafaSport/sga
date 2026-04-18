@@ -1,5 +1,6 @@
 'use client';
 
+import { Lock, Mail, User } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
@@ -41,29 +42,40 @@ export default function LoginPage() {
                 {/* Formulário */}
                 <form onSubmit={handleLogin} className="flex flex-col gap-4">
                     {/* Email */}
-                    <input
-                        type="email"
-                        placeholder="Digite seu email"
-                        className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                    <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-400 bg-white">
+                        <div className="px-3 text-gray-500">
+                            <Mail size={18} />
+                        </div>
+                        <input
+                            type="email"
+                            placeholder="Digite seu email"
+                            className="w-full p-3 outline-none bg-transparent"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
 
                     {/* Senha */}
-                    <input
-                        type="password"
-                        placeholder="Digite sua senha"
-                        className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                        value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
-                    />
+                    <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-400 bg-white">
+                        <div className="px-3 text-gray-500">
+                            <Lock size={18} />
+                        </div>
+                        <input
+                            type="password"
+                            placeholder="Digite sua senha"
+                            className="w-full p-3 outline-none bg-transparent"
+                            value={senha}
+                            onChange={(e) => setSenha(e.target.value)}
+                        />
+                    </div>
 
                     {/* Botão */}
                     <button
                         type="submit"
                         disabled={loading}
-                        className="bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+                        className="flex items-center justify-center gap-2 bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50"
                     >
+                        <User size={20} />
                         {loading ? 'Entrando...' : 'Entrar'}
                     </button>
                 </form>
