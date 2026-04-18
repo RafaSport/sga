@@ -16,7 +16,9 @@ export default function Input({
     icon,
 }: InputProps) {
     return (
-        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-400 bg-white transition">
+        <div
+            className="w-full p-3 outline-none bg-transparent text-sm md:text-base"
+        >
             {icon && <div className="px-3 text-gray-500">{icon}</div>}
 
             <input

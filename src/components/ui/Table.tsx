@@ -24,7 +24,7 @@ export default function Table({
     return (
         <div className="bg-white rounded-xl shadow">
             {/* SCROLL MOBILE */}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-xl">
                 <table className="w-full text-sm min-w-[600px]">
                     {/* HEADER */}
                     <thead className="bg-gray-100 text-gray-700">

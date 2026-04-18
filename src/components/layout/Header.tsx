@@ -26,7 +26,7 @@ export default function Header({ setOpen }: any) {
                     <Menu size={22} />
                 </button>
 
-                <h1 className="font-semibold text-gray-700 text-sm md:text-base">
+                <h1 className="font-semibold text-gray-700 text-sm md:text-base truncate">
                     Sistema de Gestão de Abrigos
                 </h1>
             </div>
@@ -43,7 +43,7 @@ export default function Header({ setOpen }: any) {
                 <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => signOut()}
+                    onClick={() => signOut({ callbackUrl: '/login' })}
                     icon={<LogOut size={16} />}
                 />
             </div>
