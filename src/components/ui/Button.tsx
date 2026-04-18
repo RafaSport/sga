@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 interface ButtonProps {
-    children: ReactNode;
+    children?: ReactNode; // agora opcional
     variant?: 'primary' | 'danger' | 'ghost';
     size?: 'sm' | 'md';
     type?: 'button' | 'submit';
@@ -12,20 +12,12 @@ interface ButtonProps {
 
 /*
 ========================================================
-BOTÃO PADRÃO DO SISTEMA (DESIGN SYSTEM)
+BOTÃO PADRÃO DO SISTEMA
 
-- Centraliza estilos de botão
-- Evita repetição de classes
-- Permite padronização visual
-
-VARIANTES:
-- primary → ação principal (azul)
-- danger → ação destrutiva (vermelho)
-- ghost → botão neutro (sem fundo)
-
-TAMANHOS:
-- sm → usado em header, tabelas
-- md → usado em formulários
+Agora suporta:
+✔ só texto
+✔ texto + ícone
+✔ só ícone (muito usado em tabelas)
 
 ========================================================
 */
@@ -39,20 +31,14 @@ export default function Button({
     loading = false,
     icon,
 }: ButtonProps) {
-    // ==========================
-    // VARIANTES DE COR
-    // ==========================
     const variants = {
         primary: 'bg-blue-600 text-white hover:bg-blue-700',
         danger: 'bg-red-500 text-white hover:bg-red-600',
         ghost: 'bg-transparent text-gray-700 hover:bg-gray-100',
     };
 
-    // ==========================
-    // TAMANHOS
-    // ==========================
     const sizes = {
-        sm: 'px-3 py-1 text-sm',
+        sm: 'px-2 py-1 text-sm',
         md: 'px-4 py-2 text-base',
     };
 
@@ -69,11 +55,11 @@ export default function Button({
                 ${loading ? 'opacity-50 cursor-not-allowed' : ''}
             `}
         >
-            {/* Ícone opcional */}
+            {/* Ícone */}
             {icon && <span>{icon}</span>}
 
-            {/* Texto do botão */}
-            {loading ? 'Carregando...' : children}
+            {/* Texto (opcional) */}
+            {children && (loading ? 'Carregando...' : children)}
         </button>
     );
 }
