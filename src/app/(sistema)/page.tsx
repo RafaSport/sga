@@ -1,24 +1,21 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/shared/lib/auth"
-import { redirect } from "next/navigation"
+export default function Page() {
+    return (
+        <div>
+            <h2 className="text-xl font-bold mb-4">Dashboard</h2>
 
-export default async function Home() {
-  const session = await getServerSession(authOptions)
+            <div className="grid grid-cols-3 gap-4">
+                <div className="bg-white p-4 rounded shadow">
+                    Total de Acolhidos: 120
+                </div>
 
-  // 🔒 Se não estiver logado → manda pro login
-  if (!session) {
-    redirect("/login")
-  }
+                <div className="bg-white p-4 rounded shadow">
+                    Vagas Disponíveis: 30
+                </div>
 
-  return (
-    <div>
-      <h1 className="text-2xl font-bold">
-        Dashboard
-      </h1>
-
-      <p className="mt-2">
-        Bem-vindo ao sistema de gestão de abrigos.
-      </p>
-    </div>
-  )
+                <div className="bg-white p-4 rounded shadow">
+                    Transferências: 5
+                </div>
+            </div>
+        </div>
+    );
 }

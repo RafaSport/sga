@@ -1,36 +1,90 @@
-"use client"
+'use client';
 
-import Link from "next/link"
+import { FileText, LayoutDashboard, UserCog, Users, X } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-export default function Sidebar() {
-  return (
-    <aside className="w-64 h-screen bg-gray-900 text-white p-4">
-      
-      {/* Título do sistema */}
-      <h1 className="text-xl font-bold mb-6">
-        SGA Recife
-      </h1>
+/*
+========================================================
+SIDEBAR RESPONSIVA
 
-      {/* Menu */}
-      <nav className="flex flex-col gap-3">
-        
-        <Link href="/" className="hover:bg-gray-700 p-2 rounded">
-          Dashboard
-        </Link>
+✔ desktop → fixa
+✔ mobile → overlay (abre/fecha)
+========================================================
+*/
 
-        <Link href="/acolhidos" className="hover:bg-gray-700 p-2 rounded">
-          Acolhidos
-        </Link>
+const menuItems = [
+    { label: 'Dashboard', href: '/', icon: LayoutDashboard },
+    { label: 'Acolhidos', href: '/acolhidos', icon: Users },
+    { label: 'Relatórios', href: '/relatorios', icon: FileText },
+    { label: 'Equipe', href: '/equipe', icon: UserCog },
+];
 
-        <Link href="/equipe" className="hover:bg-gray-700 p-2 rounded">
-          Equipe
-        </Link>
+export default function Sidebar({ open, setOpen }: any) {
+    const pathname = usePathname();
 
-        <Link href="/relatorios" className="hover:bg-gray-700 p-2 rounded">
-          Relatórios
-        </Link>
+    return (
+        <>
+            {/* OVERLAY (mobile) */}
+            {open && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                    onClick={() => setOpen(false)}
+                />
+            )}
 
-      </nav>
-    </aside>
-  )
+            <aside
+                className={`
+                    fixed md:static z-50
+                    w-64 h-screen bg-blue-900 text-white flex flex-col
+                    transform transition-transform
+                    ${open ? 'translate-x-0' : '-translate-x-full'}
+                    md:translate-x-0
+                `}
+            >
+                {/* HEADER SIDEBAR */}
+                <div className="p-4 border-b border-blue-800 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <img src="/images/logo_recife.jpg" className="h-10" />
+                        <span className="font-bold text-sm">SGA</span>
+                    </div>
+
+                    {/* botão fechar mobile */}
+                    <button
+                        className="md:hidden"
+                        onClick={() => setOpen(false)}
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {/* MENU */}
+                <nav className="flex-1 p-4 space-y-1">
+                    {menuItems.map((item) => {
+                        const isActive = pathname === item.href;
+                        const Icon = item.icon;
+
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setOpen(false)} // fecha no mobile
+                                className={`
+                                    flex items-center gap-3 p-2 rounded-lg transition
+                                    ${
+                                        isActive
+                                            ? 'bg-blue-700 font-semibold'
+                                            : 'hover:bg-blue-800 text-blue-100'
+                                    }
+                                `}
+                            >
+                                <Icon size={18} />
+                                {item.label}
+                            </Link>
+                        );
+                    })}
+                </nav>
+            </aside>
+        </>
+    );
 }
