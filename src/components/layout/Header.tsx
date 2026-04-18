@@ -1,5 +1,7 @@
 'use client';
 
+import Button from '@/components/ui/Button';
+import { LogOut } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 
 export default function Header() {
@@ -7,11 +9,14 @@ export default function Header() {
 
     return (
         <header className="h-16 bg-white border-b flex items-center justify-between px-6">
+            {/* Título */}
             <h1 className="font-semibold text-gray-700">
                 Sistema de Gestão de Abrigos
             </h1>
 
+            {/* Usuário + Ações */}
             <div className="flex items-center gap-4">
+                {/* Dados do usuário */}
                 <div className="text-right">
                     <p className="text-sm font-medium">{session?.user?.nome}</p>
                     <p className="text-xs text-gray-500">
@@ -19,12 +24,15 @@ export default function Header() {
                     </p>
                 </div>
 
-                <button
+                {/* Botão de sair usando design system */}
+                <Button
+                    variant="danger"
+                    size="sm"
                     onClick={() => signOut()}
-                    className="bg-red-500 text-white px-3 py-1 rounded"
+                    icon={<LogOut size={16} />}
                 >
                     Sair
-                </button>
+                </Button>
             </div>
         </header>
     );
