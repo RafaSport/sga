@@ -1,97 +1,90 @@
 'use client';
 
-import { FileText, LayoutDashboard, UserCog, Users } from 'lucide-react';
+import { FileText, LayoutDashboard, UserCog, Users, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 /*
 ========================================================
-SIDEBAR DO SISTEMA
+SIDEBAR RESPONSIVA
 
-Responsável pela navegação principal.
-
-REGRAS:
-- Destacar rota ativa
-- Manter consistência visual
-- Ser escalável (novos módulos)
-
+✔ desktop → fixa
+✔ mobile → overlay (abre/fecha)
 ========================================================
 */
 
-// ==========================
-// CONFIGURAÇÃO DO MENU
-// ==========================
 const menuItems = [
-    {
-        label: 'Dashboard',
-        href: '/',
-        icon: LayoutDashboard,
-    },
-    {
-        label: 'Acolhidos',
-        href: '/acolhidos',
-        icon: Users,
-    },
-    {
-        label: 'Relatórios',
-        href: '/relatorios',
-        icon: FileText,
-    },
-    {
-        label: 'Equipe',
-        href: '/equipe',
-        icon: UserCog,
-    },
+    { label: 'Dashboard', href: '/', icon: LayoutDashboard },
+    { label: 'Acolhidos', href: '/acolhidos', icon: Users },
+    { label: 'Relatórios', href: '/relatorios', icon: FileText },
+    { label: 'Equipe', href: '/equipe', icon: UserCog },
 ];
 
-export default function Sidebar() {
-    // Hook do Next para saber a rota atual
+export default function Sidebar({ open, setOpen }: any) {
     const pathname = usePathname();
 
     return (
-        <aside className="w-64 h-screen bg-blue-900 text-white flex flex-col">
-            {/* ==========================
-               LOGO
-            ========================== */}
-            <div className="p-4 border-b border-blue-800 flex items-center gap-2">
-                <img
-                    src="/images/logo_recife.jpg"
-                    alt="Prefeitura"
-                    className="h-10"
+        <>
+            {/* OVERLAY (mobile) */}
+            {open && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                    onClick={() => setOpen(false)}
                 />
-                <span className="font-bold text-sm">SGA</span>
-            </div>
+            )}
 
-            {/* ==========================
-               MENU
-            ========================== */}
-            <nav className="flex-1 p-4 space-y-1">
-                {menuItems.map((item) => {
-                    // verifica se é a rota ativa
-                    const isActive = pathname === item.href;
+            <aside
+                className={`
+                    fixed md:static z-50
+                    w-64 h-screen bg-blue-900 text-white flex flex-col
+                    transform transition-transform
+                    ${open ? 'translate-x-0' : '-translate-x-full'}
+                    md:translate-x-0
+                `}
+            >
+                {/* HEADER SIDEBAR */}
+                <div className="p-4 border-b border-blue-800 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <img src="/images/logo_recife.jpg" className="h-10" />
+                        <span className="font-bold text-sm">SGA</span>
+                    </div>
 
-                    const Icon = item.icon;
+                    {/* botão fechar mobile */}
+                    <button
+                        className="md:hidden"
+                        onClick={() => setOpen(false)}
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
 
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={`
-                                flex items-center gap-3 p-2 rounded-lg transition
-                                
-                                ${
-                                    isActive
-                                        ? 'bg-blue-700 font-semibold'
-                                        : 'hover:bg-blue-800 text-blue-100'
-                                }
-                            `}
-                        >
-                            <Icon size={18} />
-                            {item.label}
-                        </Link>
-                    );
-                })}
-            </nav>
-        </aside>
+                {/* MENU */}
+                <nav className="flex-1 p-4 space-y-1">
+                    {menuItems.map((item) => {
+                        const isActive = pathname === item.href;
+                        const Icon = item.icon;
+
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setOpen(false)} // fecha no mobile
+                                className={`
+                                    flex items-center gap-3 p-2 rounded-lg transition
+                                    ${
+                                        isActive
+                                            ? 'bg-blue-700 font-semibold'
+                                            : 'hover:bg-blue-800 text-blue-100'
+                                    }
+                                `}
+                            >
+                                <Icon size={18} />
+                                {item.label}
+                            </Link>
+                        );
+                    })}
+                </nav>
+            </aside>
+        </>
     );
 }
